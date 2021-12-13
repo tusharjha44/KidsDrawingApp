@@ -18,8 +18,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- In FrameLayout the component which are
-       added below are in foreground and added above are in Background.-->
         <ImageView
             android:id="@+id/iv_background"
             android:layout_width="match_parent"

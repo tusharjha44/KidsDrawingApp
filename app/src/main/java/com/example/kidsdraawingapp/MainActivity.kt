@@ -30,7 +30,7 @@ import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
-    private var mImageButtonCurrentPaint: ImageButton? = null // A variable for current color is picked from color pallet.
+    private var mImageButtonCurrentPaint: ImageButton? = null
 
     private var customProgressDialog: Dialog? = null
 
@@ -118,9 +118,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Method is used to launch the dialog to select different brush sizes.
-     */
+
     private fun showBrushSizeChooserDialog() {
         val brushDialog = Dialog(this)
         brushDialog.setContentView(R.layout.dialog_brush_size)
@@ -151,14 +149,11 @@ class MainActivity : AppCompatActivity() {
      */
     fun paintClicked(view: View) {
         if (view !== mImageButtonCurrentPaint) {
-            // Update the color
             val imageButton = view as ImageButton
             // Here the tag is used for swaping the current color with previous color.
             // The tag stores the selected view
             val colorTag = imageButton.tag.toString()
-            // The color is set as per the selected tag here.
             drawingView?.setColor(colorTag)
-            // Swap the backgrounds for last active and currently active image button.
             imageButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.pallet_present))
             mImageButtonCurrentPaint?.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -166,23 +161,13 @@ class MainActivity : AppCompatActivity() {
                     R.drawable.pallet_normal
                 )
             )
-
-            //Current view is updated with selected view in the form of ImageButton.
             mImageButtonCurrentPaint = view
         }
     }
-    /**
-     * We are calling this method to check the permission status
-     */
+
     private fun isReadStorageAllowed(): Boolean {
         //Getting the permission status
-        // Here the checkSelfPermission is
-        /**
-         * Determine whether <em>you</em> have been granted a particular permission.
-         *
-         * @param permission The name of the permission being checked.
-         *
-         */
+        // Here the checkSelfPermission
         val result = ContextCompat.checkSelfPermission(
             this, Manifest.permission.READ_EXTERNAL_STORAGE
         )
@@ -243,23 +228,17 @@ class MainActivity : AppCompatActivity() {
      */
     private fun getBitmapFromView(view: View): Bitmap {
 
-        //Define a bitmap with the same size as the view.
         // CreateBitmap : Returns a mutable bitmap with the specified width and height
         val returnedBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         //Bind a canvas to it
         val canvas = Canvas(returnedBitmap)
-        //Get the view's background
         val bgDrawable = view.background
         if (bgDrawable != null) {
-            //has background drawable, then draw it on the canvas
             bgDrawable.draw(canvas)
         } else {
-            //does not have background drawable, then draw white background on the canvas
             canvas.drawColor(Color.WHITE)
         }
-        // draw the view on the canvas
         view.draw(canvas)
-        //return the bitmap
         return returnedBitmap
     }
 
@@ -273,23 +252,7 @@ class MainActivity : AppCompatActivity() {
                     // The buffer capacity is initially 32 bytes, though its size increases if necessary.
 
                     mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
-                    /**
-                     * Write a compressed version of the bitmap to the specified outputstream.
-                     * If this returns true, the bitmap can be reconstructed by passing a
-                     * corresponding inputstream to BitmapFactory.decodeStream(). Note: not
-                     * all Formats support all bitmap configs directly, so it is possible that
-                     * the returned bitmap from BitmapFactory could be in a different bitdepth,
-                     * and/or may have lost per-pixel alpha (e.g. JPEG only supports opaque
-                     * pixels).
-                     *
-                     * @param format   The format of the compressed image
-                     * @param quality  Hint to the compressor, 0-100. 0 meaning compress for
-                     *                 small size, 100 meaning compress for max quality. Some
-                     *                 formats, like PNG which is lossless, will ignore the
-                     *                 quality setting
-                     * @param stream   The outputstream to write the compressed data.
-                     * @return true if successfully compressed to the specified stream.
-                     */
+
 
                     val f = File(
                         externalCacheDir?.absoluteFile.toString()
@@ -332,7 +295,7 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    
+
     private fun shareImage(result:String){
 
         /*MediaScannerConnection provides a way for applications to pass a
@@ -367,25 +330,18 @@ class MainActivity : AppCompatActivity() {
             // that is displayed by the system when you try to start an activity with multiple possible matches,
             // with these differences in behavior:
         }
-        // END
+
     }
-    /**
-     * Method is used to show the Custom Progress Dialog.
-     */
+
     private fun showProgressDialog() {
         customProgressDialog = Dialog(this@MainActivity)
 
-        /*Set the screen content from a layout resource.
-        The resource will be inflated, adding all top-level views to the screen.*/
         customProgressDialog?.setContentView(R.layout.dialog_custom_progress)
 
-        //Start the dialog and display it on screen.
         customProgressDialog?.show()
     }
 
-    /**
-     * This function is used to dismiss the progress dialog if it is visible to user.
-     */
+
     private fun cancelProgressDialog() {
         if (customProgressDialog != null) {
             customProgressDialog?.dismiss()

@@ -40,21 +40,17 @@ class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
         setUpDrawing()
     }
 
-    /**
-     * This method initializes the attributes of the
-     * ViewForDrawing class.
-     */
     private fun setUpDrawing() {
         mDrawPaint = Paint()
         mDrawPath = CustomPath(color, mBrushSize)
 
         mDrawPaint?.color = color
 
-        mDrawPaint?.style = Paint.Style.STROKE // This is to draw a STROKE style
-        mDrawPaint?.strokeJoin = Paint.Join.ROUND // This is for store join
-        mDrawPaint?.strokeCap = Paint.Cap.ROUND // This is for stroke Cap
+        mDrawPaint?.style = Paint.Style.STROKE
+        mDrawPaint?.strokeJoin = Paint.Join.ROUND
+        mDrawPaint?.strokeCap = Paint.Cap.ROUND
 
-        mCanvasPaint = Paint(Paint.DITHER_FLAG) // Paint flag that enables dithering when blitting.
+        mCanvasPaint = Paint(Paint.DITHER_FLAG)
 
     }
 
@@ -64,21 +60,10 @@ class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
         canvas = Canvas(mCanvasBitmap!!)
     }
 
-
-    /**
-     * This method is called when a stroke is drawn on the canvas
-     * as a part of the painting.
-     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         /**
-         * Draw the specified bitmap, with its top/left corner at (x,y), using the specified paint,
-         * transformed by the current matrix.
-         *
-         *If the bitmap and canvas have different densities, this function will take care of
-         * automatically scaling the bitmap to draw at the same density as the canvas.
-         *
          * @param bitmap The bitmap to be drawn
          * @param left The position of the left side of the bitmap being drawn
          * @param top The position of the top side of the bitmap being drawn
@@ -102,37 +87,32 @@ class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
         }
     }
 
-    /**
-     * This method acts as an event listener when a touch
-     * event is detected on the device.
-     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val touchX = event.x // Touch event of X coordinate
-        val touchY = event.y // touch event of Y coordinate
+        val touchX = event.x
+        val touchY = event.y
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 mDrawPath!!.color = color
                 mDrawPath!!.brushThickness = mBrushSize
 
-                mDrawPath!!.reset() // Clear any lines and curves from the path, making it empty.
+                mDrawPath!!.reset()
                 mDrawPath!!.moveTo(
                     touchX,
                     touchY
-                ) // Set the beginning of the next contour to the point (x,y).
+                )
             }
 
             MotionEvent.ACTION_MOVE -> {
                 mDrawPath!!.lineTo(
                     touchX,
                     touchY
-                ) // Add a line from the last point to the specified point (x,y).
+                )
             }
 
             MotionEvent.ACTION_UP -> {
 
-                mPaths.add(mDrawPath!!) //Add when to stroke is drawn to canvas and added in the path arraylist
-
+                mPaths.add(mDrawPath!!)
                 mDrawPath = CustomPath(color, mBrushSize)
             }
             else -> return false
@@ -142,11 +122,6 @@ class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
         return true
     }
 
-    /**
-     * This method is called when either the brush or the eraser
-     * sizes are to be changed. This method sets the brush/eraser
-     * sizes to the new values depending on user selection.
-     */
     fun setSizeForBrush(newSize: Float) {
         mBrushSize = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, newSize,
@@ -155,28 +130,18 @@ class DrawingView(context: Context,attrs:AttributeSet): View(context,attrs) {
         mDrawPaint!!.strokeWidth = mBrushSize
     }
 
-    /**
-     * This function is called when the user desires a color change.
-     * This functions sets the color of a store to selected color and able to draw on view using that color.
-     *
-     * @param newColor
-     */
+
     fun setColor(newColor: String) {
         color = Color.parseColor(newColor)
         mDrawPaint!!.color = color
     }
 
-    /**
-     * This function is called when the user selects the undo
-     * command from the application. This function removes the
-     * last stroke input by the user depending on the
-     * number of times undo has been activated.
-     */
+
     fun onClickUndo() {
         if (mPaths.size > 0) {
 
             mUndoPaths.add(mPaths.removeAt(mPaths.size - 1))
-            invalidate() // Invalidate the whole view. If the view is visible
+            invalidate()
         }
     }
     internal inner class CustomPath(var color:Int,var brushThickness:Float):Path()
